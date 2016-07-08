@@ -1,6 +1,8 @@
 package com.lastminute.repository;
 
+import com.lastminute.model.ImportDuty;
 import com.lastminute.model.ProductMap;
+import com.lastminute.model.mapper.ImportDutyRowMapper;
 import com.lastminute.model.mapper.ProductRowMapper;
 import java.util.HashMap;
 import java.util.List;
@@ -41,11 +43,11 @@ public class DataRepository {
     return currentProductCount;
   }
 
-  public List<ProductMap> getProductMappings() {
+  public List<ProductMap> getProductMapList() {
     JdbcTemplate jd = new JdbcTemplate(datasource);
 
     List<ProductMap> products = jd.query(
-            "select pr.product_name, "
+            "select   pr.product_name, "
             + "       pc.category_name, "
             + "       str.tax_rate_name, "
             + "       str.tax_rate_percent "
@@ -61,13 +63,35 @@ public class DataRepository {
     return products;
   }
 
-  public Map<String, ProductMap> getProductMap() {
+  public Map<String, ProductMap> getProductMapHashMap() {
     Map<String, ProductMap> result = new HashMap<>();
-    for (ProductMap mapItem : getProductMappings()) {
+    for (ProductMap mapItem : getProductMapList()) {
       result.put(mapItem.getProductName().toLowerCase(), mapItem);
     }
 
     return result;
   }
 
+  public List<ImportDuty> getImportDutyMapList() {
+    JdbcTemplate jd = new JdbcTemplate(datasource);
+
+    List<ImportDuty> importDuties = jd.query(
+            "select   category_name, "
+            + "       tax_rate_percent "
+            + "from   import_duty_rate "
+            + "order by ID", new ImportDutyRowMapper());
+
+    logger.debug("Retrieved " + importDuties.size() + " product mappings.");
+
+    return importDuties;
+  }
+  
+  public Map<String, ImportDuty> getImportDutyMapHashMap() {
+    Map<String, ImportDuty> result = new HashMap<>();
+    for (ImportDuty mapItem : getImportDutyMapList()) {
+      result.put(mapItem.getCategoryName().toLowerCase(), mapItem);
+    }
+
+    return result;
+  }
 }

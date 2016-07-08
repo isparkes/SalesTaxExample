@@ -22,15 +22,14 @@ public class ProductMappingTest extends ConfiguredUnitTest {
   
   @Test
   public void checkProductCount() {
-    int productCount = productService.getproductMap().size();
+    int productCount = productService.getProductMapList().size();
     
     assertEquals(6,productCount);
   }
   
-  
   @Test
-  public void checkProductMapRaw() {
-    List<ProductMap> productMapList = productService.getproductMap();
+  public void checkProductMapCompleteness() {
+    List<ProductMap> productMapList = productService.getProductMapList();
     
     for (ProductMap productMap : productMapList) {
       assertNotNull(productMap.getProductName());
@@ -42,7 +41,7 @@ public class ProductMappingTest extends ConfiguredUnitTest {
   
   @Test
   public void checkProductMapByName() {
-    List<ProductMap> productMapList = productService.getproductMap();
+    List<ProductMap> productMapList = productService.getProductMapList();
     
     for (ProductMap productMap : productMapList) {
       assertNotNull(productMap.getProductName());

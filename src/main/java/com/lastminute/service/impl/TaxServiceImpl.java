@@ -25,5 +25,4 @@ public class TaxServiceImpl implements TaxService {
     // Default rounding to 4dp
     return includedSalesTax.add(includedImportDuty).round(new MathContext(4, RoundingMode.HALF_UP));
   }
-
 }

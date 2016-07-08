@@ -12,8 +12,8 @@ values
 
 insert into import_duty_rate (ID,category_name,tax_rate_percent)
 values
-    (1,'imported goods','5'),
-    (2,'domestic goods','0');
+    (1,'imported','5'),
+    (2,'domestic','0');
 
 insert into products (ID,product_name,category_id)
 values

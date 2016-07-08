@@ -5,33 +5,17 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 /**
- * A single product mapping.
+ * A single import duty tax entry.
  * 
  * @author ian
  */
 @Component
-public class ProductMap {
+public class ImportDuty {
 	@NotNull
-  private String productName;
   private String categoryName;
-  private String taxRateName;
   
 	@NotNull
   private BigDecimal taxRatePercent;
-
-  /**
-   * @return the productName
-   */
-  public String getProductName() {
-    return productName;
-  }
-
-  /**
-   * @param productName the productName to set
-   */
-  public void setProductName(String productName) {
-    this.productName = productName;
-  }
 
   /**
    * @return the categoryName
@@ -48,20 +32,6 @@ public class ProductMap {
   }
 
   /**
-   * @return the taxRateName
-   */
-  public String getTaxRateName() {
-    return taxRateName;
-  }
-
-  /**
-   * @param taxRateName the taxRateName to set
-   */
-  public void setTaxRateName(String taxRateName) {
-    this.taxRateName = taxRateName;
-  }
-
-  /**
    * @return the taxRatePercent
    */
   public BigDecimal getTaxRatePercent() {
@@ -73,6 +43,5 @@ public class ProductMap {
    */
   public void setTaxRatePercent(BigDecimal taxRatePercent) {
     this.taxRatePercent = taxRatePercent;
-  }
-  
+  }  
 }
