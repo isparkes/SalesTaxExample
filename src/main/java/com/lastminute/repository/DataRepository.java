@@ -1,5 +1,8 @@
 package com.lastminute.repository;
 
+import com.lastminute.model.ProductMap;
+import com.lastminute.model.mapper.ProductRowMapper;
+import java.util.List;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -21,10 +24,25 @@ public class DataRepository {
   public long getProductRowCount() {
     JdbcTemplate jd = new JdbcTemplate(datasource);
 
-    // do the lookup into the overrides first
     long currentProductCount = jd.queryForObject("select count(*) from products", Long.class);
 
     return currentProductCount;
   }
 
+  public List<ProductMap> getProductMappings() {
+    JdbcTemplate jd = new JdbcTemplate(datasource);
+
+    List<ProductMap> products = jd.query(
+            "select pr.product_name, "
+          + "       pc.category_name, "
+          + "       str.tax_rate_name, "
+          + "       str.tax_rate_percent "
+          + "from   products pr,"
+          + "       product_category pc,"
+          + "       sales_tax_rate str "
+          + "where  pr.category_id = pc.ID "
+          + "and    pc.tax_rate_id = str.ID", new ProductRowMapper());
+
+    return products;
+  }
 }

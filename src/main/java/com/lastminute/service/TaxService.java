@@ -10,13 +10,6 @@ import java.math.BigDecimal;
 public interface TaxService {
   
   /**
-   * Gets the number of products we manage.
-   * 
-   * @return 
-   */
-  public boolean getProductCount();
-  
-  /**
    * Calculate the included sales tax amount based on the gross sales amount,
    * and the sales tax and import duty. Presented as BigDecimals, because 
    * working with doubles tends to accumulate rounding errors (if we end up
