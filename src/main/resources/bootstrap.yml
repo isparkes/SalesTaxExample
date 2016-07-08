@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: SalesTax
+# Uncomment and adapt the following to force profile(s), comma separated
+# but normally this is managed by Spring
+#  profiles:
+#    active: default
