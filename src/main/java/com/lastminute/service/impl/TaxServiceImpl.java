@@ -5,8 +5,7 @@ import com.lastminute.model.LineItem;
 import com.lastminute.service.ProductService;
 import com.lastminute.service.TaxService;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -36,57 +35,66 @@ public class TaxServiceImpl implements TaxService {
 
   @Override
   public LineItem getLineItemFromInput(String input) {
-    Scanner dataScanner = new Scanner(input);
+    if (input == null || input.trim().isEmpty()) {
+      return null;
+    } else {
+      try {
+      Scanner dataScanner = new Scanner(input);
 
-    // Quantity
-    int qty = dataScanner.nextInt();
+      // Quantity
+      int qty = dataScanner.nextInt();
 
-    // product description, stripping "imported"
-    String productDesc = "";
-    boolean imported = false;
-    boolean foundAt = false;
-    while (dataScanner.hasNext() && !foundAt) {
-      String tmpProductNamePart = dataScanner.next();
-      if (tmpProductNamePart.equalsIgnoreCase("at")) {
-        foundAt = true;
-      } else {
-        if (tmpProductNamePart.equalsIgnoreCase("imported")) {
-          imported = true;
+      // product description, stripping "imported"
+      String productDesc = "";
+      boolean imported = false;
+      boolean foundAt = false;
+      while (dataScanner.hasNext() && !foundAt) {
+        String tmpProductNamePart = dataScanner.next();
+        if (tmpProductNamePart.equalsIgnoreCase("at")) {
+          foundAt = true;
         } else {
-          productDesc += tmpProductNamePart;
-          productDesc += " ";
+          if (tmpProductNamePart.equalsIgnoreCase("imported")) {
+            imported = true;
+          } else {
+            productDesc += tmpProductNamePart;
+            productDesc += " ";
+          }
         }
       }
+
+      // Original cost
+      double originalCost = dataScanner.nextDouble();
+
+      // Put it all together
+      LineItem lineItem = new LineItem();
+      if (imported) {
+        lineItem.setImportDuty(productService.getImportDutyByProductName("imported"));
+      } else {
+        lineItem.setImportDuty(productService.getImportDutyByProductName("domestic"));
+      }
+
+      // Impose our internal rounding to 4dp, make sure we have all 4 dp
+      lineItem.setOriginalPrice(NumberUtils.round4dp(new BigDecimal(originalCost)).setScale(4));
+
+      lineItem.setProduct(productService.getProductMapByProductName(productDesc));
+
+      lineItem.setQuantity(qty);
+
+      return lineItem;
+      } catch (NoSuchElementException ex) {
+        logger.error("Could not parse input <"+input+">. No such element.");
+        return null;
+      }
     }
-
-    // Original cost
-    double originalCost = dataScanner.nextDouble();
-
-    // Put it all together
-    LineItem lineItem = new LineItem();
-    if (imported) {
-      lineItem.setImportDuty(productService.getImportDutyByProductName("imported"));
-    } else {
-      lineItem.setImportDuty(productService.getImportDutyByProductName("domestic"));
-    }
-
-    // Impose our internal rounding to 4dp, make sure we have all 4 dp
-    lineItem.setOriginalPrice(NumberUtils.round4dp(new BigDecimal(originalCost)).setScale(4));
-
-    lineItem.setProduct(productService.getProductMapByProductName(productDesc));
-
-    lineItem.setQuantity(qty);
-
-    return lineItem;
   }
 
   @Override
   public void calculateTaxAndCosts(LineItem lineItem) {
     // Calculate out the total net price
     lineItem.setTotalNetPrice(lineItem.getOriginalPrice().multiply(new BigDecimal(lineItem.getQuantity())));
-    
-    BigDecimal taxContent = NumberUtils.round4dp(calculateTaxAmount(lineItem.getTotalNetPrice(),lineItem.getProduct().getTaxRatePercent(),lineItem.getImportDuty().getTaxRatePercent()));
-    
+
+    BigDecimal taxContent = NumberUtils.round4dp(calculateTaxAmount(lineItem.getTotalNetPrice(), lineItem.getProduct().getTaxRatePercent(), lineItem.getImportDuty().getTaxRatePercent()));
+
     lineItem.setCalculatedTaxContent(taxContent);
     lineItem.setCalculatedTotalPrice(lineItem.getTotalNetPrice().add(taxContent));
   }

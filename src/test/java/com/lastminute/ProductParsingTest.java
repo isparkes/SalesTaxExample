@@ -4,6 +4,7 @@ import com.lastminute.model.LineItem;
 import com.lastminute.service.TaxService;
 import com.lastminute.test.ConfiguredUnitTest;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +91,29 @@ public class ProductParsingTest extends ConfiguredUnitTest {
     
     // 18.99 + 1.90 = 20.89, rounded to 2 dp = 20.89
     assertTrue(checkBigDecimalResult("20.8900",lineItem.getCalculatedTotalPrice()));
+  }
+  
+  @Test
+  public void checkProductParsingNullInput() {
+    LineItem lineItem = taxService.getLineItemFromInput(null);
+    assertNull(lineItem);
+  }
+  
+  @Test
+  public void checkProductParsingNoInput() {
+    LineItem lineItem = taxService.getLineItemFromInput("     ");
+    assertNull(lineItem);
+  }
+  
+  @Test
+  public void checkProductParsingMalformedInput1() {
+    LineItem lineItem = taxService.getLineItemFromInput("     1 ");
+    assertNull(lineItem);
+  }
+  
+  @Test
+  public void checkProductParsingMalformedInput2() {
+    LineItem lineItem = taxService.getLineItemFromInput("Not a quantity");
+    assertNull(lineItem);
   }
 }

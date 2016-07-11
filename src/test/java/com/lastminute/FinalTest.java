@@ -4,9 +4,8 @@ import com.lastminute.model.Basket;
 import com.lastminute.model.LineItem;
 import com.lastminute.service.TaxService;
 import com.lastminute.test.ConfiguredUnitTest;
-import com.lastminute.utils.NumberUtils;
-import java.math.BigDecimal;
-import static org.junit.Assert.assertTrue;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +18,17 @@ public class FinalTest extends ConfiguredUnitTest {
   
   @Autowired
   TaxService taxService;
-  
+
+  @Before
+  public void setUp() {
+    System.out.print(" ***********************  RESULTS  **********************");
+  }
+
+  @After
+  public void tearDown() {
+    System.out.print(" ***********************  RESULTS  **********************");
+  }
+
   @Test
   public void basket1() {
     String input1 = "1 book at 12.49";

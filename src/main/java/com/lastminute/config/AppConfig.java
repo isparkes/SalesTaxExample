@@ -44,7 +44,7 @@ public class AppConfig {
     URL versionResourceFile = getClass().getResource("/VersionFile.txt");
 
     if (versionResourceFile == null) {
-      return null;
+      return "Version information not found";
     }
 
     input = getClass().getResourceAsStream("/VersionFile.txt");
