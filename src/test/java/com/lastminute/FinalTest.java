@@ -26,7 +26,7 @@ public class FinalTest extends ConfiguredUnitTest {
 
   @After
   public void tearDown() {
-    System.out.println(" ***********************  RESULTS  **********************");
+    System.out.println(" ********************************************************");
   }
 
   @Test
