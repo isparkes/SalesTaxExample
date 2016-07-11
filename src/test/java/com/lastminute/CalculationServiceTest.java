@@ -3,8 +3,6 @@ package com.lastminute;
 import com.lastminute.service.TaxService;
 import com.lastminute.test.ConfiguredUnitTest;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class CalculationServiceTest extends ConfiguredUnitTest {
     
     BigDecimal salesTaxAmount = taxService.calculateTaxAmount(grossAmount, salesTaxDefault, importDutyDomestic);
     
-    assertTrue(checkBigDecimalResult("1.499", salesTaxAmount));
+    assertTrue(checkBigDecimalResult("1.5000", salesTaxAmount));
   }
   
   @Test
@@ -43,15 +41,15 @@ public class CalculationServiceTest extends ConfiguredUnitTest {
     
     BigDecimal salesTaxAmount = taxService.calculateTaxAmount(grossAmount, salesTaxExempted, importDutyImported);
     
-    assertTrue(checkBigDecimalResult("0.50",salesTaxAmount));
+    assertTrue(checkBigDecimalResult("0.5000",salesTaxAmount));
   }
   
   @Test
   public void checkTaxCalculationDefaultImported() {
-    BigDecimal grossAmount = new BigDecimal(47.50).round(new MathContext(4, RoundingMode.HALF_UP));
+    BigDecimal grossAmount = new BigDecimal("47.50");
     
     BigDecimal salesTaxAmount = taxService.calculateTaxAmount(grossAmount, salesTaxDefault, importDutyImported);
     
-    assertTrue(checkBigDecimalResult("7.125",salesTaxAmount));
+    assertTrue(checkBigDecimalResult("7.1500",salesTaxAmount));
   }
 }

@@ -3,9 +3,6 @@ package com.lastminute;
 import com.lastminute.model.LineItem;
 import com.lastminute.service.TaxService;
 import com.lastminute.test.ConfiguredUnitTest;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -29,7 +26,7 @@ public class ProductParsingTest extends ConfiguredUnitTest {
     assertEquals("book",lineItem.getProduct().getProductName());
     assertEquals("books",lineItem.getProduct().getCategoryName());
     assertEquals("domestic",lineItem.getImportDuty().getCategoryName());
-    assertTrue(checkBigDecimalResult("12.49", lineItem.getOriginalPrice()));
+    assertTrue(checkBigDecimalResult("12.4900", lineItem.getOriginalPrice()));
   }
   
   @Test
@@ -40,7 +37,7 @@ public class ProductParsingTest extends ConfiguredUnitTest {
     assertEquals("music CD",lineItem.getProduct().getProductName());
     assertEquals("default_tax_rate",lineItem.getProduct().getCategoryName());
     assertEquals("domestic",lineItem.getImportDuty().getCategoryName());
-    assertTrue(checkBigDecimalResult("14.99",lineItem.getOriginalPrice()));
+    assertTrue(checkBigDecimalResult("14.9900",lineItem.getOriginalPrice()));
   }
   
   @Test
@@ -51,7 +48,7 @@ public class ProductParsingTest extends ConfiguredUnitTest {
     assertEquals("box of chocolates",lineItem.getProduct().getProductName());
     assertEquals("food",lineItem.getProduct().getCategoryName());
     assertEquals("imported",lineItem.getImportDuty().getCategoryName());
-    assertTrue(lineItem.getOriginalPrice().compareTo(new BigDecimal(10.00)) == 0);
+    assertTrue(checkBigDecimalResult("10.0000",lineItem.getOriginalPrice()));
   }
   
   @Test
@@ -62,7 +59,7 @@ public class ProductParsingTest extends ConfiguredUnitTest {
     assertEquals("box of chocolates",lineItem.getProduct().getProductName());
     assertEquals("food",lineItem.getProduct().getCategoryName());
     assertEquals("imported",lineItem.getImportDuty().getCategoryName());
-    assertTrue(checkBigDecimalResult("11.25",lineItem.getOriginalPrice()));
+    assertTrue(checkBigDecimalResult("11.2500",lineItem.getOriginalPrice()));
   }
   
   @Test
@@ -70,14 +67,14 @@ public class ProductParsingTest extends ConfiguredUnitTest {
     LineItem lineItem = taxService.getLineItemFromInput("1 box of imported chocolates at 11.25");
     taxService.calculateTaxAndCosts(lineItem);
     
-    assertTrue(checkBigDecimalResult("11.25",lineItem.getOriginalPrice()));
-    assertTrue(checkBigDecimalResult("11.25",lineItem.getTotalNetPrice()));
+    assertTrue(checkBigDecimalResult("11.2500",lineItem.getOriginalPrice()));
+    assertTrue(checkBigDecimalResult("11.2500",lineItem.getTotalNetPrice()));
     
-    // import duty only at 5% = 0.5625
-    assertTrue(checkBigDecimalResult("0.5625",lineItem.getCalculatedTaxContent()));
+    // import duty only at 5% = 0.5625, BUT rounded UP to nearest 0.05 = 0.60
+    assertTrue(checkBigDecimalResult("0.6000",lineItem.getCalculatedTaxContent()));
     
-    // 11.25 + 0.5625 = 11.8125
-    assertTrue(checkBigDecimalResult("11.8125",lineItem.getCalculatedTotalPrice()));
+    // 11.25 + 0.60 = 11.8125
+    assertTrue(checkBigDecimalResult("11.8500",lineItem.getCalculatedTotalPrice()));
   }
   
   @Test
@@ -85,13 +82,13 @@ public class ProductParsingTest extends ConfiguredUnitTest {
     LineItem lineItem = taxService.getLineItemFromInput("1 bottle of perfume at 18.99");
     taxService.calculateTaxAndCosts(lineItem);
     
-    assertTrue(checkBigDecimalResult("18.99",lineItem.getOriginalPrice()));
-    assertTrue(checkBigDecimalResult("18.99",lineItem.getTotalNetPrice()));
+    assertTrue(checkBigDecimalResult("18.9900",lineItem.getOriginalPrice()));
+    assertTrue(checkBigDecimalResult("18.9900",lineItem.getTotalNetPrice()));
     
-    // sales tax at 10% = 1.899
-    assertTrue(checkBigDecimalResult("1.899",lineItem.getCalculatedTaxContent()));
+    // sales tax at 10% = 1.899, sales tax rounding = 1.90
+    assertTrue(checkBigDecimalResult("1.9000",lineItem.getCalculatedTaxContent()));
     
-    // 18.99 + 1.899 = 20.889
-    assertTrue(checkBigDecimalResult("20.889",lineItem.getCalculatedTotalPrice()));
+    // 18.99 + 1.90 = 20.89, rounded to 2 dp = 20.89
+    assertTrue(checkBigDecimalResult("20.8900",lineItem.getCalculatedTotalPrice()));
   }
 }

@@ -25,8 +25,8 @@ public class TaxServiceImpl implements TaxService {
 
   @Override
   public BigDecimal calculateTaxAmount(BigDecimal amount, BigDecimal salesTaxPercent, BigDecimal importDutyPercent) {
-    BigDecimal includedSalesTax = amount.multiply(salesTaxPercent).divide(ONE_HUNDRED);
-    BigDecimal includedImportDuty = amount.multiply(importDutyPercent).divide(ONE_HUNDRED);
+    BigDecimal includedSalesTax = NumberUtils.round4dpUpNearest5(amount.multiply(salesTaxPercent).divide(ONE_HUNDRED));
+    BigDecimal includedImportDuty = NumberUtils.round4dpUpNearest5(amount.multiply(importDutyPercent).divide(ONE_HUNDRED));
 
     logger.debug("TaxCalc: Input " + amount.toString() + " -> Sales Tax: " + includedSalesTax.toString() + ", import duty: " + includedImportDuty.toString());
 
@@ -70,8 +70,8 @@ public class TaxServiceImpl implements TaxService {
       lineItem.setImportDuty(productService.getImportDutyByProductName("domestic"));
     }
 
-    // Impose our internal rounding to 4dp
-    lineItem.setOriginalPrice(NumberUtils.round4dp(new BigDecimal(originalCost)));
+    // Impose our internal rounding to 4dp, make sure we have all 4 dp
+    lineItem.setOriginalPrice(NumberUtils.round4dp(new BigDecimal(originalCost)).setScale(4));
 
     lineItem.setProduct(productService.getProductMapByProductName(productDesc));
 
@@ -82,8 +82,11 @@ public class TaxServiceImpl implements TaxService {
 
   @Override
   public void calculateTaxAndCosts(LineItem lineItem) {
+    // Calculate out the total net price
     lineItem.setTotalNetPrice(lineItem.getOriginalPrice().multiply(new BigDecimal(lineItem.getQuantity())));
-    BigDecimal taxContent = calculateTaxAmount(lineItem.getTotalNetPrice(),lineItem.getProduct().getTaxRatePercent(),lineItem.getImportDuty().getTaxRatePercent());
+    
+    BigDecimal taxContent = NumberUtils.round4dp(calculateTaxAmount(lineItem.getTotalNetPrice(),lineItem.getProduct().getTaxRatePercent(),lineItem.getImportDuty().getTaxRatePercent()));
+    
     lineItem.setCalculatedTaxContent(taxContent);
     lineItem.setCalculatedTotalPrice(lineItem.getTotalNetPrice().add(taxContent));
   }

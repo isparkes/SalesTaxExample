@@ -12,11 +12,19 @@ import java.math.RoundingMode;
  */
 public class NumberUtils {
 
+  private static final BigDecimal twenty = new BigDecimal("20");
+
   public static BigDecimal round2dp(BigDecimal input) {
-    return input.round(new MathContext(2, RoundingMode.HALF_UP));
+    return input.setScale(2, RoundingMode.HALF_UP);
   }
   
   public static BigDecimal round4dp(BigDecimal input) {
-    return input.round(new MathContext(4, RoundingMode.HALF_UP));
+    return input.setScale(4, RoundingMode.HALF_UP);
+  }
+  
+  // Sales tax rounding, round up to nearest 0.05
+  // http://stackoverflow.com/questions/11815135/best-method-to-round-up-to-the-nearest-0-05-in-java/11815163
+  public static BigDecimal round4dpUpNearest5(BigDecimal input) {
+    return input.multiply(twenty).setScale(0, RoundingMode.UP).divide(twenty);
   }
 }
