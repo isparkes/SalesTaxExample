@@ -15,3 +15,7 @@ Key decisions which were made while building this application:
 
 Using the Git log, you can track the way that the application is created. Normally I would make a first initial commit when the basic
 tests pass, and then develop features off the master branch for later merge. This seems a bit much for this example.
+
+One other little point. I don't usually code without having a partner to code against. Clearly this is not an option in this case!
+I find partner coding and feature submission via pull request a key part of the development process. This application is extremely
+"raw" in this aspect.
