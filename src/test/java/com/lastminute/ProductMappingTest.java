@@ -65,7 +65,7 @@ public class ProductMappingTest extends ConfiguredUnitTest {
   public void checkProductMapDefault() {
     ProductMap product = productService.getProductMapByProductName("music CD");
     
-    assertEquals("music cd",product.getProductName());
+    assertEquals("music CD",product.getProductName());
     assertEquals("default_tax_rate",product.getCategoryName());
     assertEquals("default_tax_rate",product.getTaxRateName());
     assertTrue(product.getTaxRatePercent().compareTo(salesTaxDefault) == 0);

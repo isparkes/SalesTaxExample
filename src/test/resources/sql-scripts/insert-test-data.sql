@@ -18,7 +18,7 @@ values
 insert into products (ID,product_name,category_id)
 values
     (1,'book',2),
-    (2,'music cd',1),
+    (2,'music CD',1),
     (3,'chocolate bar',3),
     (4,'box of chocolates',3),
     (5,'bottle of perfume',1),

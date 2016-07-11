@@ -22,7 +22,7 @@ public class CalculationServiceTest extends ConfiguredUnitTest {
     
   @Test
   public void checkTaxCalculationExemptedDomestic() {
-    BigDecimal grossAmount = new BigDecimal(12.49);
+    BigDecimal grossAmount = new BigDecimal("12.49");
     
     BigDecimal salesTaxAmount = taxService.calculateTaxAmount(grossAmount, salesTaxExempted, importDutyDomestic);
     assertTrue(salesTaxAmount.compareTo(BigDecimal.ZERO) == 0);
@@ -30,22 +30,20 @@ public class CalculationServiceTest extends ConfiguredUnitTest {
   
   @Test
   public void checkTaxCalculationDefaultDomestic() {
-    BigDecimal grossAmount = new BigDecimal(14.99);
+    BigDecimal grossAmount = new BigDecimal("14.99");
     
     BigDecimal salesTaxAmount = taxService.calculateTaxAmount(grossAmount, salesTaxDefault, importDutyDomestic);
     
-    BigDecimal expected = new BigDecimal(1.4990).round(new MathContext(4, RoundingMode.HALF_UP));
-    assertTrue(salesTaxAmount.compareTo(expected) == 0);
+    assertTrue(checkBigDecimalResult("1.499", salesTaxAmount));
   }
   
   @Test
   public void checkTaxCalculationExemptedImported() {
-    BigDecimal grossAmount = new BigDecimal(10.00);
+    BigDecimal grossAmount = new BigDecimal("10.00");
     
     BigDecimal salesTaxAmount = taxService.calculateTaxAmount(grossAmount, salesTaxExempted, importDutyImported);
     
-    BigDecimal expected = new BigDecimal(0.50).round(new MathContext(4, RoundingMode.HALF_UP));
-    assertTrue(salesTaxAmount.compareTo(expected) == 0);
+    assertTrue(checkBigDecimalResult("0.50",salesTaxAmount));
   }
   
   @Test
@@ -54,7 +52,6 @@ public class CalculationServiceTest extends ConfiguredUnitTest {
     
     BigDecimal salesTaxAmount = taxService.calculateTaxAmount(grossAmount, salesTaxDefault, importDutyImported);
     
-    BigDecimal expected = new BigDecimal(7.125).round(new MathContext(4, RoundingMode.HALF_UP));
-    assertTrue(salesTaxAmount.compareTo(expected) == 0);
+    assertTrue(checkBigDecimalResult("7.125",salesTaxAmount));
   }
 }

@@ -1,5 +1,6 @@
 package com.lastminute.service;
 
+import com.lastminute.model.LineItem;
 import java.math.BigDecimal;
 
 /**
@@ -21,5 +22,22 @@ public interface TaxService {
    * @param importDutyPercent
    * @return 
    */
-  public BigDecimal calculateTaxAmount(BigDecimal grossAmount, BigDecimal salesTaxPercent, BigDecimal importDutyPercent);  
+  public BigDecimal calculateTaxAmount(BigDecimal grossAmount, BigDecimal salesTaxPercent, BigDecimal importDutyPercent);
+  
+  /**
+   * Main entry point for each line. We attempt to parse the input to
+   * build an internal representation which we can use for output and taxation.
+   * 
+   * @param input The string we are handling
+   * @return The parsed line item, ready for taxation and output
+   */
+  public LineItem getLineItemFromInput(String input);
+
+  /**
+   * perform the tax calculation on the given line item.
+   * 
+   * @param lineItem the item we are working on
+   */
+  public void calculateTaxAndCosts(LineItem lineItem);
+  
 }
