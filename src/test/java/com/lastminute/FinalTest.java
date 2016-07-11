@@ -21,12 +21,12 @@ public class FinalTest extends ConfiguredUnitTest {
 
   @Before
   public void setUp() {
-    System.out.print(" ***********************  RESULTS  **********************");
+    System.out.println(" ***********************  RESULTS  **********************");
   }
 
   @After
   public void tearDown() {
-    System.out.print(" ***********************  RESULTS  **********************");
+    System.out.println(" ***********************  RESULTS  **********************");
   }
 
   @Test
