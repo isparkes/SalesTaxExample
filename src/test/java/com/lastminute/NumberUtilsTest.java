@@ -1,7 +1,7 @@
 package com.lastminute;
 
 import com.lastminute.test.ConfiguredUnitTest;
-import com.lastminute.utils.NumberUtils;
+import com.lastminute.utils.SalesTaxNumberUtils;
 import java.math.BigDecimal;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class NumberUtilsTest extends ConfiguredUnitTest {
   public void checkFiveCentRounding() {
     BigDecimal input = new BigDecimal("0.5625");
     
-    BigDecimal result = NumberUtils.round4dpUpNearest5(input);
+    BigDecimal result = SalesTaxNumberUtils.round4dpUpNearest5(input);
     
     assertTrue(this.checkBigDecimalResult("0.6", result));
   }

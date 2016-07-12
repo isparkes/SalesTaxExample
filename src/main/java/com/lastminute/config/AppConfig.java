@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @Import({DataBaseConfig.class})
 @ComponentScan(basePackages = {
+  "com.lastminute.api",
   "com.lastminute.config",
   "com.lastminute.service"
 })

@@ -1,6 +1,8 @@
 package com.lastminute.service.impl;
 
-import com.lastminute.utils.NumberUtils;
+import com.lastminute.model.BasketRequest;
+import com.lastminute.model.BasketResponse;
+import com.lastminute.utils.SalesTaxNumberUtils;
 import com.lastminute.model.LineItem;
 import com.lastminute.service.ProductService;
 import com.lastminute.service.TaxService;
@@ -24,13 +26,13 @@ public class TaxServiceImpl implements TaxService {
 
   @Override
   public BigDecimal calculateTaxAmount(BigDecimal amount, BigDecimal salesTaxPercent, BigDecimal importDutyPercent) {
-    BigDecimal includedSalesTax = NumberUtils.round4dpUpNearest5(amount.multiply(salesTaxPercent).divide(ONE_HUNDRED));
-    BigDecimal includedImportDuty = NumberUtils.round4dpUpNearest5(amount.multiply(importDutyPercent).divide(ONE_HUNDRED));
+    BigDecimal includedSalesTax = SalesTaxNumberUtils.round4dpUpNearest5(amount.multiply(salesTaxPercent).divide(ONE_HUNDRED));
+    BigDecimal includedImportDuty = SalesTaxNumberUtils.round4dpUpNearest5(amount.multiply(importDutyPercent).divide(ONE_HUNDRED));
 
     logger.debug("TaxCalc: Input " + amount.toString() + " -> Sales Tax: " + includedSalesTax.toString() + ", import duty: " + includedImportDuty.toString());
 
     // Default rounding to 4dp
-    return includedSalesTax.add(NumberUtils.round4dp(includedImportDuty));
+    return includedSalesTax.add(SalesTaxNumberUtils.round4dp(includedImportDuty));
   }
 
   @Override
@@ -74,7 +76,7 @@ public class TaxServiceImpl implements TaxService {
       }
 
       // Impose our internal rounding to 4dp, make sure we have all 4 dp
-      lineItem.setOriginalPrice(NumberUtils.round4dp(new BigDecimal(originalCost)).setScale(4));
+      lineItem.setOriginalPrice(SalesTaxNumberUtils.round4dp(new BigDecimal(originalCost)).setScale(4));
 
       lineItem.setProduct(productService.getProductMapByProductName(productDesc));
 
@@ -93,9 +95,20 @@ public class TaxServiceImpl implements TaxService {
     // Calculate out the total net price
     lineItem.setTotalNetPrice(lineItem.getOriginalPrice().multiply(new BigDecimal(lineItem.getQuantity())));
 
-    BigDecimal taxContent = NumberUtils.round4dp(calculateTaxAmount(lineItem.getTotalNetPrice(), lineItem.getProduct().getTaxRatePercent(), lineItem.getImportDuty().getTaxRatePercent()));
+    BigDecimal taxContent = SalesTaxNumberUtils.round4dp(calculateTaxAmount(lineItem.getTotalNetPrice(), lineItem.getProduct().getTaxRatePercent(), lineItem.getImportDuty().getTaxRatePercent()));
 
     lineItem.setCalculatedTaxContent(taxContent);
     lineItem.setCalculatedTotalPrice(lineItem.getTotalNetPrice().add(taxContent));
+  }
+
+  @Override
+  public BasketResponse performTaxationOnBasket(BasketRequest basketRequestBody) {
+    BasketResponse response = new BasketResponse();
+    for (String item : basketRequestBody.getContents()) {
+      LineItem lineItem = getLineItemFromInput(item);
+      calculateTaxAndCosts(lineItem);
+      response.addLineItem(lineItem);
+    }
+    return response;
   }
 }

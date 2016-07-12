@@ -1,5 +1,7 @@
 package com.lastminute.service;
 
+import com.lastminute.model.BasketRequest;
+import com.lastminute.model.BasketResponse;
 import com.lastminute.model.LineItem;
 import java.math.BigDecimal;
 
@@ -39,5 +41,12 @@ public interface TaxService {
    * @param lineItem the item we are working on
    */
   public void calculateTaxAndCosts(LineItem lineItem);
-  
+
+  /**
+   * Parse the input lines and perform taxation on them.
+   * 
+   * @param basketRequestBody
+   * @return 
+   */
+  public BasketResponse performTaxationOnBasket(BasketRequest basketRequestBody);
 }

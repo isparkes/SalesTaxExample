@@ -10,7 +10,7 @@ import java.math.RoundingMode;
  * 
  * @author ian
  */
-public class NumberUtils {
+public class SalesTaxNumberUtils {
 
   private static final BigDecimal twenty = new BigDecimal("20");
 

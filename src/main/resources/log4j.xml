@@ -4,7 +4,7 @@
 
   <!-- REST Log -->
   <appender name="rest" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="File" value="./logs/swisscom-ttsgw-rest.log"/>
+    <param name="File" value="./logs/salestax-rest.log"/>
     <param name="DatePattern" value="'.'yyyyMMdd"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss,SSS};%m%n"/>
@@ -21,41 +21,12 @@
 
   <!-- General Server Log -->
   <appender name="roller" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="File" value="./logs/swisscom-ttsgw-srv.log"/>
+    <param name="File" value="./logs/salestax-srv.log"/>
     <param name="DatePattern" value="'.'yyyyMMdd"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %t %-5p %c - %m%n"/>
     </layout>
   </appender>
-
-  <!-- **************************** Perf4J appender ************************** -->
-  <appender name="perf4jAppender" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="DatePattern" value="'.'yyyyMMdd" />
-    <param name="File" value="./logs/swisscom-ttsgw-stats.log" />
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%m%n" />
-    </layout>
-  </appender>
-  
-  <!-- This AsyncCoalescingStatisticsAppender groups StopWatch log messages 
-  into GroupedTimingStatistics messages which it sends on the file appender 
-  defined below -->
-  <appender name="CoalescingStatistics" class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
-    <!-- The TimeSlice option is used to determine the time window for which 
-    all received StopWatch logs are aggregated to create a single GroupedTimingStatistics 
-    log. Here we set it to 60 seconds, overriding the default of 30000 ms -->
-    <param name="TimeSlice" value="60000" />
-    <appender-ref ref="perf4jAppender" />
-  </appender>
-
-  <!-- The Perf4J logger. Note that org.perf4j.TimingLogger is the value of 
-  the org.perf4j.StopWatch.DEFAULT_LOGGER_NAME constant. Also, note that additivity 
-  is set to false, which is usually what is desired - this means that timing 
-  statements will only be sent to this logger and NOT to upstream loggers. -->
-  <logger name="TimingLogger" additivity="false">
-    <level value="INFO" />
-    <appender-ref ref="CoalescingStatistics" />
-  </logger>
 
   <!-- *********************************************************************** -->
 
@@ -66,7 +37,7 @@
     <appender-ref ref="console" />
   </logger>
   
-  <logger name="com.swisscom.io.ttsgw.api" additivity="false">
+  <logger name="com.lastminute.api" additivity="false">
     <level value="INFO"/>
     <appender-ref ref="rest"/>
   </logger>

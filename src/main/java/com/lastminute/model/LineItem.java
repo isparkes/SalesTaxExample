@@ -1,5 +1,7 @@
 package com.lastminute.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lastminute.utils.SalesTaxNumberUtils;
 import java.math.BigDecimal;
 import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
@@ -132,13 +134,14 @@ public class LineItem {
     this.calculatedTotalPrice = calculatedTotalPrice;
   }
   
+  @JsonIgnore
   public String getReceiptDescription() {
     StringBuilder builder = new StringBuilder();
     builder.append("").append(getQuantity()).append(" ");
     if (getImportDuty().getCategoryName().equalsIgnoreCase("imported")) {
       builder.append(getImportDuty().getCategoryName()).append(" ");
     }
-    builder.append(getProduct().getProductName()).append(": ").append(calculatedTotalPrice.toString());
+    builder.append(getProduct().getProductName()).append(": ").append(SalesTaxNumberUtils.round2dp(calculatedTotalPrice).toString());
     return builder.toString();
   }
 }
