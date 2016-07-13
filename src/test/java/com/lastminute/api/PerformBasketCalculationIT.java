@@ -55,6 +55,6 @@ public class PerformBasketCalculationIT extends ConfiguredIntegrationTest {
     MvcResult calculateResponse = resultCurrent.andReturn();
     String rawContentCurrent = calculateResponse.getResponse().getContentAsString();
 
-    assertEquals("{\"contents\":[\"1 music CD: 11.2800\"],\"salesTax\":1.0500,\"total\":11.2800}", rawContentCurrent);
+    assertEquals("{\"contents\":[\"1 music CD: 11.28\"],\"salesTax\":1.05,\"total\":11.28}", rawContentCurrent);
 	}
 }

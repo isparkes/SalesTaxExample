@@ -5,8 +5,8 @@ enableConsoleOutput: true
 jdbc:
   driver: com.mysql.jdbc.Driver
   url: jdbc:mysql://localhost:3306/sales_tax
-  user: root
-  password: cpr
+  user: sales_tax_ro
+  password: Zusse877
 
 # "unit-test" Profile
 ---
