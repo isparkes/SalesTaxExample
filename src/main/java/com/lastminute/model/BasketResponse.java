@@ -62,6 +62,28 @@ public class BasketResponse {
     return builder.toString();
   }
   
+  public List<String> toStrings() {
+    List<String> result = new ArrayList<>();
+    
+    // Spit out line items
+    for (LineItem item : getContents()) {
+      StringBuilder builder = new StringBuilder();
+      builder.append(item.getQuantity()).append(" ");
+      if (item.getImportDuty().getCategoryName().equalsIgnoreCase("imported")) {
+        builder.append(item.getImportDuty().getCategoryName()).append(" ");
+      }
+      builder.append(item.getProduct().getProductName()).append(":");
+      builder.append(SalesTaxNumberUtils.round2dp(item.getCalculatedTotalPrice()));
+      result.add(builder.toString());
+    }
+    
+    // basket totals
+    result.add("Sales Taxes: " + SalesTaxNumberUtils.round2dp(getSalesTax()));
+    result.add("Total: " + SalesTaxNumberUtils.round2dp(getTotal()));
+    
+    return result;
+  }
+  
   @JsonIgnore
   public int getItemCount() {
     return getContents().size();

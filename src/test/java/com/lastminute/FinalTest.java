@@ -4,9 +4,9 @@ import com.lastminute.model.BasketResponse;
 import com.lastminute.model.LineItem;
 import com.lastminute.service.TaxService;
 import com.lastminute.test.ConfiguredUnitTest;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -16,24 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class FinalTest extends ConfiguredUnitTest {
   
+  private final static Logger logger = LoggerFactory.getLogger("console");
+  
   @Autowired
   TaxService taxService;
-
-  @Before
-  public void setUp() {
-    System.out.println(" ***********************  RESULTS  **********************");
-  }
-
-  @After
-  public void tearDown() {
-    System.out.println(" ********************************************************");
-  }
 
   @Test
   public void basket1() {
     String input1 = "1 book at 12.49";
     String input2 = "1 music CD at 14.99";
     String input3 = "1 chocolate bar at 0.85";
+    logger.info(" ************************  INPUT  ***********************");
+    logger.info(input1);
+    logger.info(input2);
+    logger.info(input3);
     
     BasketResponse basket = new BasketResponse();
     
@@ -47,13 +43,19 @@ public class FinalTest extends ConfiguredUnitTest {
     taxService.calculateTaxAndCosts(item3);
     basket.addLineItem(item3);
     
-    System.out.print(basket.toString());
+    logger.info("***********************  RESULTS  **********************");
+    for (String line : basket.toStrings()) {
+      logger.info(line);
+    }
   }
 
   @Test
   public void basket2() {
     String input1 = "1 imported box of chocolates at 10.00";
     String input2 = "1 imported bottle of perfume at 47.50";
+    logger.info(" ************************  INPUT  ***********************");
+    logger.info(input1);
+    logger.info(input2);
     
     BasketResponse basket = new BasketResponse();
     
@@ -64,7 +66,10 @@ public class FinalTest extends ConfiguredUnitTest {
     taxService.calculateTaxAndCosts(item2);
     basket.addLineItem(item2);
     
-    System.out.print(basket.toString());
+    logger.info("***********************  RESULTS  **********************");
+    for (String line : basket.toStrings()) {
+      logger.info(line);
+    }
   }
   
   @Test
@@ -73,6 +78,11 @@ public class FinalTest extends ConfiguredUnitTest {
     String input2 = "1 bottle of perfume at 18.99";
     String input3 = "1 packet of headache pills at 9.75";
     String input4 = "1 box of imported chocolates at 11.25";
+    logger.info(" ************************  INPUT  ***********************");
+    logger.info(input1);
+    logger.info(input2);
+    logger.info(input3);
+    logger.info(input4);
     
     BasketResponse basket = new BasketResponse();
     
@@ -89,6 +99,10 @@ public class FinalTest extends ConfiguredUnitTest {
     taxService.calculateTaxAndCosts(item4);
     basket.addLineItem(item4);
     
-    System.out.print(basket.toString());
+    logger.info("***********************  RESULTS  **********************");
+    for (String line : basket.toStrings()) {
+      logger.info(line);
+    }
+    logger.info("********************************************************");
   }
 }
